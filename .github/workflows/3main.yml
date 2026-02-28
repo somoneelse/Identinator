@@ -18,9 +18,9 @@ jobs:
       with:
         dotnet-version: 6.0.x  # 项目是 net6.0-windows
         
-    - name: Build solution
-      run: dotnet build Identinator.sln -c Release
-      
+    - name: Build with MSBuild
+  run: |nuget restore Identinator.sln
+    msbuild Identinator.sln /p:Configuration=Release /p:Platform="Any CPU"
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
