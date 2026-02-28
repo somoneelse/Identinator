@@ -1,0 +1,29 @@
+name: Build Identinator
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code with full history
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x  # 项目是 net6.0-windows
+        
+    - name: Build solution
+      run: dotnet build Identinator.sln -c Release
+      
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Identinator
+        path: |
+          **/bin/Release/**/*.exe
