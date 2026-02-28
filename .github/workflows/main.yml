@@ -1,0 +1,36 @@
+name: Build Identinator (.NET)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.0.x
+          8.0.x
+        # 同时安装多个版本，确保兼容
+        
+    - name: Restore dependencies
+      run: dotnet restore Identinator.sln
+      
+    - name: Build
+      run: dotnet build Identinator.sln -c Release
+      
+    - name: Publish (如果生成独立exe)
+      run: dotnet publish -c Release -o publish
+      
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: Identinator
+        path: |
+          **/bin/Release/**/*.exe
+          publish/*.exe
